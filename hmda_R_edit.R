@@ -6,10 +6,7 @@ library(ROCR)
 library(quantmod)
 library(stargazer)
 
-
-hmda_data <- read.csv('C:/ml/R/projects/hmda_sw.txt',sep='\t',header=TRUE)
-
-
+hmda_data <- read.csv('https://raw.githubusercontent.com/nickkas/python_ml_ect_/master/hmda.txt',sep='\t',header=TRUE)
 
 
 #Data Cleaning
