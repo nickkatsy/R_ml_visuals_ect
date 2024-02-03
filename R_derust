@@ -1,0 +1,63 @@
+library(tidyverse)
+library(MASS)
+library(boot)
+library(dplyr)
+library(caret)
+library(pROC)
+
+
+df <- read.csv("https://raw.githubusercontent.com/nickkatsy/python_ml_ect_/master/income.csv")
+
+
+colnames(df) <- gsub("\\.", "_", colnames(df))
+
+
+colSums(is.na(df))
+
+
+df$income <- ifelse(df$income == "<=50K", 0, 1)
+
+
+df <- drop_na(df)
+
+
+
+for (i in names(df)) {
+  if (is.factor(df[[i]])) {
+    df[[i]] <- as.numeric(as.character(df[[i]]))
+  }
+}
+
+marital_status_plot <- ggplot(df, aes(x = marital_status, fill = as.factor(income))) +
+  geom_bar(stat = "count", position = "dodge") +
+  ggtitle("Marital Status (0: <= 50K, 1: > 50K)") +
+  xlab("Marital Status") +
+  ylab("Count")
+
+
+age_plot <- ggplot(df, aes(x = as.factor(income), y = age)) +
+  geom_boxplot() +
+  ggtitle("Age vs. Income (0: <= 50K, 1: > 50K)") +
+  xlab("Income") +
+  ylab("Age")
+
+
+
+set.seed(42)
+split_index <- createDataPartition(df$income, p = 0.8, list = FALSE)
+train_data <- df[split_index, ]
+test_data <- df[-split_index, ]
+
+logreg_model <- glm(income ~ ., data = train_data, family = "binomial")
+
+
+pred_prob <- predict(logreg_model, newdata = test_data, type = "response")
+pred_class <- ifelse(pred_prob > 0.5, 1, 0)
+
+
+confusion_matrix <- table(Actual = test_data$income, Predicted = pred_class)
+print(confusion_matrix)
+
+roc_curve <- roc(test_data$income, pred_prob)
+roc_auc <- auc(roc_curve)
+print(paste("ROC-AUC Score:", roc_auc))
