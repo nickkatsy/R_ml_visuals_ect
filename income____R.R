@@ -8,7 +8,7 @@ library(pROC)
 #discount python
 #goofy syntax and slow
 
-df <- read.csv('C:/ML/python/data/income.csv',sep=',')
+df <- read.csv('https://raw.githubusercontent.com/nickkatsy/python_ml_ect_/master/income.csv')
 head(df,10)
 unique(df)
 str(df)
@@ -60,4 +60,3 @@ pred_prob <- prediction(pred_prob, df$income)
 
 
 unlist(slot(performance(pred_prob, "auc"), "y.values"))
-
