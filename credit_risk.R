@@ -7,7 +7,7 @@ library(boot)
 
 
 
-df <- read.csv('C:/ML/python/data/credit_risk.csv',sep=',')
+df <- read.csv('https://raw.githubusercontent.com/nickkatsy/python_ml_ect_/master/credit_risk.csv',sep = ',')
 
 head(df,10)
 str(df)
@@ -65,5 +65,3 @@ pred2 <- predict.glm(model2,type="response")
 pred_prob2 <- prediction(pred2,df$Default)
 auc2 <- unlist(slot(performance(pred_prob2,"auc"),"y.values"))
 print(auc2)
-
-
